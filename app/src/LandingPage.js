@@ -27,6 +27,7 @@ const LandingPage = () => {
                 </div>
                 <button 
                     className="continue-button"
+                    onClick={() => navigate('/chat')}
                 >
                     Continue
                 </button>

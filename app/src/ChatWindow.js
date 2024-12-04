@@ -2,14 +2,8 @@
 import React from 'react';
 import DatePicker from "react-datepicker";
 
-const ChatWindow = ({ messages, input, setInput, handleSend, renderMessage, messagesEndRef, setShowChat }) => (
+const ChatWindow = ({ messages, input, setInput, handleSend, renderMessage, messagesEndRef }) => (
     <div className="chat-window">
-        <button 
-            className="back-button"
-            onClick={() => setShowChat(false)}
-        >
-            Back
-        </button>
         <div className="messages-container">
             {messages.map((msg, index) => renderMessage(msg, index))}
             <div ref={messagesEndRef} />

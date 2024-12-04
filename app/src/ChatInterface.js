@@ -3,6 +3,7 @@ import ChatWindow from './ChatWindow';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './ChatInterface.css';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:8000/api/chat/';
 
@@ -12,6 +13,7 @@ const ChatInterface = () => {
     const [destination, setDestination] = useState('');
     const [dateRange, setDateRange] = useState([null, null]);
     const messagesEndRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setMessages([{
@@ -152,8 +154,18 @@ const ChatInterface = () => {
         return null;
     };
 
+    const handleBack = () => {
+        navigate('/');
+    };
+
     return (
         <>
+            <button 
+                className="back-button"
+                onClick={handleBack}
+            >
+                Back
+            </button>
             <ChatWindow 
                 messages={messages}
                 input={input}
