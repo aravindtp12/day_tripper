@@ -3,6 +3,7 @@ import LandingPage from './LandingPage';
 import ChatWindow from './ChatWindow';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import './ChatInterface.css';
 
 const API_URL = 'http://localhost:8000/api/chat/';
 

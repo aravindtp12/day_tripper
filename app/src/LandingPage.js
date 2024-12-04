@@ -1,5 +1,6 @@
 // app/src/LandingPage.js
 import React from 'react';
+import './LandingPage.css';
 
 const LandingPage = ({ setShowChat }) => (
     <div className="landing-page">
