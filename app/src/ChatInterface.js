@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import LandingPage from './LandingPage';
 import ChatWindow from './ChatWindow';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,7 +12,6 @@ const ChatInterface = () => {
     const [destination, setDestination] = useState('');
     const [dateRange, setDateRange] = useState([null, null]);
     const messagesEndRef = useRef(null);
-    const [showChat, setShowChat] = useState(false);
 
     useEffect(() => {
         setMessages([{
@@ -156,19 +154,14 @@ const ChatInterface = () => {
 
     return (
         <>
-            {!showChat ? (
-                <LandingPage setShowChat={setShowChat} />
-            ) : (
-                <ChatWindow 
-                    messages={messages}
-                    input={input}
-                    setInput={setInput}
-                    handleSend={handleSend}
-                    renderMessage={renderMessage}
-                    messagesEndRef={messagesEndRef}
-                    setShowChat={setShowChat}
-                />
-            )}
+            <ChatWindow 
+                messages={messages}
+                input={input}
+                setInput={setInput}
+                handleSend={handleSend}
+                renderMessage={renderMessage}
+                messagesEndRef={messagesEndRef}
+            />
         </>
     );
 };

@@ -1,16 +1,23 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ChatInterface from './ChatInterface';
+import LandingPage from './LandingPage';
 
 function App() {
   return (
-    <div className="App">
-      <div className="chat-container">
-        <ChatInterface />
-        <div className="right-panel">
-          {/* Right panel content will go here */}
+    <Router>
+      <div className="App">
+        <div className="chat-container">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/chat" element={<ChatInterface />} />
+          </Routes>
+          <div className="right-panel">
+            {/* Right panel content will go here */}
+          </div>
         </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
