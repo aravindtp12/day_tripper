@@ -2,3 +2,6 @@ selenium==4.25.0
 praw
 langchain_ollama
 amadeus
+django
+djangorestframework
+django-cors-headers
