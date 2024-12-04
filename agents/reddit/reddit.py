@@ -94,18 +94,10 @@ class RedditAgent:
                 doc_list.append(submission)
 
         prompt = f"""
-        Using the content below fetched from multiple subreddits on {self.destination} travel, provide recommendations on things to do in Greece.
+        Using the content below fetched from multiple subreddits on {self.destination} travel, provide recommendations on things to do in {self.destination}.
         Do not generate responses for the questions that may be present in the content and ignore anything irrelevant for tourists. 
         Your only job is to generate recomendations for tourists.
         Content: 
         {', '.join(doc_list)}
         """
         return self.model.invoke(prompt)
-
-
-
-
-destination = "greece"
-reddit_agent = RedditAgent(destination)
-recs = reddit_agent.generate_recommendations()
-print(recs)

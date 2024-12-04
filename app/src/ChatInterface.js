@@ -1,22 +1,31 @@
-import * as React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api/chat/';
 
 const ChatInterface = () => {
-    const [messages, setMessages] = React.useState([]);
-    const [input, setInput] = React.useState('');
-    const [dateRange, setDateRange] = React.useState([null, null]);
-    const messagesEndRef = React.useRef(null);
+    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState('');
+    const [destination, setDestination] = useState('');
+    const [dateRange, setDateRange] = useState([null, null]);
+    const messagesEndRef = useRef(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setMessages([{
             text: "Where do you want to travel to?",
             sender: 'bot',
             type: 'text'
         }]);
     }, []);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     const handleSend = () => {
         if (input.trim()) {
@@ -26,6 +35,7 @@ const ChatInterface = () => {
                 type: 'text' 
             }]);
 
+            setDestination(input);
             setInput('');
 
             setTimeout(() => {
@@ -46,7 +56,7 @@ const ChatInterface = () => {
 
     const saveTravelPlan = async (destination, startDate, endDate) => {
         try {
-            const response = await fetch(`${API_URL}/chat/`, {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,10 +69,25 @@ const ChatInterface = () => {
             });
             
             const data = await response.json();
-            console.log('Travel plan saved:', data);
+            console.log('Response from backend:', data);
+
+            if (data.status === 'success' && data.recommendations) {
+                setMessages(prev => [...prev, { 
+                    text: data.recommendations, 
+                    sender: 'bot',
+                    type: 'text'
+                }]);
+            } else {
+                throw new Error('No recommendations received');
+            }
             
         } catch (error) {
-            console.error('Error saving travel plan:', error);
+            console.error('Error in saveTravelPlan:', error);
+            setMessages(prev => [...prev, { 
+                text: "Sorry, I encountered an error while generating recommendations.", 
+                sender: 'bot',
+                type: 'text'
+            }]);
         }
     };
 
@@ -71,21 +96,29 @@ const ChatInterface = () => {
         
         if (update[0] && update[1]) {
             const dateMessage = `${update[0].toLocaleDateString()} - ${update[1].toLocaleDateString()}`;
+            
             setMessages(prev => [...prev, { 
                 text: dateMessage, 
                 sender: 'user', 
                 type: 'text' 
             }]);
 
-            saveTravelPlan(messages[1].text, update[0], update[1]);
-
-            setTimeout(() => {
+            if (destination) {
                 setMessages(prev => [...prev, { 
-                    text: `Great! Let me help you plan your trip from ${update[0].toLocaleDateString()} to ${update[1].toLocaleDateString()}.`, 
+                    text: "Generating travel recommendations... This might take a minute.", 
                     sender: 'bot',
                     type: 'text'
                 }]);
-            }, 1000);
+
+                saveTravelPlan(destination, update[0], update[1]);
+            } else {
+                console.error('Destination not set');
+                setMessages(prev => [...prev, { 
+                    text: "Sorry, I couldn't find your destination. Please try again.", 
+                    sender: 'bot',
+                    type: 'text'
+                }]);
+            }
         }
     };
 
