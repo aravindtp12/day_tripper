@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import LandingPage from './LandingPage';
+import ChatWindow from './ChatWindow';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -10,6 +12,7 @@ const ChatInterface = () => {
     const [destination, setDestination] = useState('');
     const [dateRange, setDateRange] = useState([null, null]);
     const messagesEndRef = useRef(null);
+    const [showChat, setShowChat] = useState(false);
 
     useEffect(() => {
         setMessages([{
@@ -151,25 +154,21 @@ const ChatInterface = () => {
     };
 
     return (
-        <div className="chat-window">
-            <div className="messages-container">
-                {messages.map((msg, index) => renderMessage(msg, index))}
-                <div ref={messagesEndRef} />
-            </div>
-            <div className="input-container">
-                <input
-                    className="message-input"
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                    placeholder="Type a message..."
+        <>
+            {!showChat ? (
+                <LandingPage setShowChat={setShowChat} />
+            ) : (
+                <ChatWindow 
+                    messages={messages}
+                    input={input}
+                    setInput={setInput}
+                    handleSend={handleSend}
+                    renderMessage={renderMessage}
+                    messagesEndRef={messagesEndRef}
+                    setShowChat={setShowChat}
                 />
-                <button className="send-button" onClick={handleSend}>
-                    Send
-                </button>
-            </div>
-        </div>
+            )}
+        </>
     );
 };
 
